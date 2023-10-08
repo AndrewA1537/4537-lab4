@@ -2,8 +2,9 @@
 
 const HTTP = require("http"); // HTTP module for creating server
 const PATH = require("path"); // Path module for handling file and directory paths
-const URL = require("url"); // URL module for URL resolution and parsing
-const FS = require("fs"); // File System module for interacting with the file system
+const URL  = require("url");  // URL module for URL resolution and parsing
+const FS   = require("fs");   // File System module for interacting with the file system
+const CORS = require("cors"); // Import the cors package
 
 // =====================================================================================================================
 
@@ -12,12 +13,12 @@ const SERVICE_ROOT_ENDPOINT = "/api/definitions/";
 const PORT = process.env.PORT || 3000;
 
 const POST = "POST";
-const GET = "GET";
+const GET  = "GET";
 
 
-const server = http.createServer((req, res) => 
+const server = HTTP.createServer((req, res) => 
 {
-    cors()(req, res, () => 
+    CORS()(req, res, () => 
     {
         if(req.method === POST && req.url === SERVICE_ROOT_ENDPOINT) 
         {
