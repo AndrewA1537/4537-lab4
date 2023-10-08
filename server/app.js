@@ -1,3 +1,16 @@
+/**
+ * RESOURCES USED:
+ * 
+ * In class lecture based code examples
+ * 
+ * used for css styling and simple html
+ * https://www.w3schools.com/css/
+ * 
+ * used for commenting, and code generation
+ * https://chat.openai.com/
+ */
+
+
 // Import required modules
 const HTTP = require("http");
 const URL  = require("url");
