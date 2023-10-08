@@ -6,7 +6,7 @@ const CORS = require("cors");
 
 // Define constants for the service's endpoint and default port
 const SERVICE_ROOT_ENDPOINT = "/api/definitions/";
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 const POST = "POST";
 const GET  = "GET";
 
@@ -38,19 +38,43 @@ const server = HTTP.createServer((req, res) =>
                 {
                     const data = JSON.parse(body);
 
-                    // Add the received definition to the in-memory array
-                    definitions.push(data);
-
-                    // Send a success response
-                    res.writeHead(200, { "Content-Type": "application/json" });
-                    res.end(
-                        JSON.stringify({
-                            success: true,
-                            message: "Definition added successfully!",
-                        })
+                    // Check if the word already exists in the definitions array
+                    const existingDefinition = definitions.find(
+                        (def) => def.word === data.word
                     );
+
+                    if(existingDefinition) 
+                    {
+                        // Send a response indicating that the word already exists
+                        res.writeHead(409, 
+                        {
+                            "Content-Type": "application/json",
+                        });
+                        res.end(
+                            JSON.stringify({
+                                success: false,
+                                message: `Warning! '${data.word}' already exists.`,
+                            })
+                        );
+                    } 
+                    else
+                    {
+                        // Add the received definition to the in-memory array
+                        definitions.push(data);
+
+                        // Send a success response
+                        res.writeHead(200, {
+                            "Content-Type": "application/json",
+                        });
+                        res.end(
+                            JSON.stringify({
+                                success: true,
+                                message: `Request #${definitions.length} (the number of total entries in your dictionary)\nNew entry recorded:\n"${data.word} : ${data.definition}"`,
+                            })
+                        );
+                    }
                 } 
-                catch(error) 
+                catch(error)
                 {
                     // Handle invalid JSON in request body
                     res.writeHead(400, { "Content-Type": "application/json" });
@@ -64,7 +88,7 @@ const server = HTTP.createServer((req, res) =>
             });
         }
         // Handle GET requests to retrieve definitions
-        else if(req.method === GET && req.url.startsWith(SERVICE_ROOT_ENDPOINT)) 
+        else if(req.method === GET && req.url.startsWith(SERVICE_ROOT_ENDPOINT))
         {
             const parsedURL  = URL.parse(req.url, true);
             const searchTerm = parsedURL.query.word;
@@ -74,7 +98,7 @@ const server = HTTP.createServer((req, res) =>
                 (def) => def.word === searchTerm
             );
 
-            if(foundDefinition) 
+            if(foundDefinition)
             {
                 res.writeHead(200, { "Content-Type": "application/json" });
                 res.end(

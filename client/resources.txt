@@ -1,0 +1,8 @@
+lecture based code examples
+
+
+https://www.w3schools.com/css/
+
+
+## used for commenting, and code generation
+https://chat.openai.com/
